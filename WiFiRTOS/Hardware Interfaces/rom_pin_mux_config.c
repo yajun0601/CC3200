@@ -52,39 +52,45 @@
 #include "rom_map.h"
 
 //*****************************************************************************
-void PinMuxConfig(void)
-{
+void PinMuxConfig(void) {
 	//
-    // Enable Peripheral Clocks 
-    //
+	// Enable Peripheral Clocks
+	//
 	MAP_PRCMPeripheralClkEnable(PRCM_UARTA0, PRCM_RUN_MODE_CLK);
+	MAP_PRCMPeripheralClkEnable(PRCM_GPIOA0, PRCM_RUN_MODE_CLK);
 	MAP_PRCMPeripheralClkEnable(PRCM_GPIOA1, PRCM_RUN_MODE_CLK);
 
 	//
-    // Configure PIN_03 for UART0 UART0_TX
-    //
+	// Configure PIN_03 for UART0 UART0_TX
+	//
 	MAP_PinTypeUART(PIN_03, PIN_MODE_7);
 
 	//
-    // Configure PIN_04 for UART0 UART0_RX
-    //
+	// Configure PIN_04 for UART0 UART0_RX
+	//
 	MAP_PinTypeUART(PIN_04, PIN_MODE_7);
 
 	//
-    // Configure PIN_64 for GPIO Output
-    //
+	// Configure PIN_61 for GPIO Output
+	//
+	MAP_PinTypeGPIO(PIN_61, PIN_MODE_0, false);
+	MAP_GPIODirModeSet(GPIOA0_BASE, GPIO_PIN_6, GPIO_DIR_MODE_OUT);
+
+	//
+	// Configure PIN_64 for GPIO Output
+	//
 	MAP_PinTypeGPIO(PIN_64, PIN_MODE_0, false);
 	MAP_GPIODirModeSet(GPIOA1_BASE, 0x2, GPIO_DIR_MODE_OUT);
 
 	//
-    // Configure PIN_01 for GPIO Output
-    //
+	// Configure PIN_01 for GPIO Output
+	//
 	MAP_PinTypeGPIO(PIN_01, PIN_MODE_0, false);
 	MAP_GPIODirModeSet(GPIOA1_BASE, 0x4, GPIO_DIR_MODE_OUT);
 
 	//
-    // Configure PIN_02 for GPIO Output
-    //
+	// Configure PIN_02 for GPIO Output
+	//
 	MAP_PinTypeGPIO(PIN_02, PIN_MODE_0, false);
 	MAP_GPIODirModeSet(GPIOA1_BASE, 0x8, GPIO_DIR_MODE_OUT);
 }

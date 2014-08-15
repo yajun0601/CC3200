@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /* Scheduler includes. */
 #include "FreeRTOS.h"
@@ -15,6 +16,12 @@
 #include "queue.h"
 #include "semphr.h"
 #include "osi.h"
+
+#include "hw_types.h"
+#include "hw_memmap.h"
+#include "gpio.h"
+#include "rom.h"
+#include "rom_map.h"
 
 #include "simpleLink.h"
 #include "wlan.h"
@@ -57,16 +64,15 @@ void ControlServer(void *pvParameters) {
 	WlanConnect();
 
 	sprintf(MsgBuffer, "Connectado a rede: %s\n\r"
-					"IP: %d.%d.%d.%d\n\r"
-					"Gateway: %d.%d.%d.%d\n\r",
-					SL_IPV4_BYTE(g_sSLCon.DeviceIP, 3),
-					SL_IPV4_BYTE(g_sSLCon.DeviceIP, 2),
-					SL_IPV4_BYTE(g_sSLCon.DeviceIP, 1),
-					SL_IPV4_BYTE(g_sSLCon.DeviceIP, 0),
-					SL_IPV4_BYTE(g_sSLCon.GatewayIP, 3),
-					SL_IPV4_BYTE(g_sSLCon.GatewayIP, 2),
-					SL_IPV4_BYTE(g_sSLCon.GatewayIP, 1),
-					SL_IPV4_BYTE(g_sSLCon.GatewayIP, 0));
+			"IP: %d.%d.%d.%d\n\r"
+			"Gateway: %d.%d.%d.%d\n\r", SL_IPV4_BYTE(g_sSLCon.DeviceIP, 3),
+			SL_IPV4_BYTE(g_sSLCon.DeviceIP, 2),
+			SL_IPV4_BYTE(g_sSLCon.DeviceIP, 1),
+			SL_IPV4_BYTE(g_sSLCon.DeviceIP, 0),
+			SL_IPV4_BYTE(g_sSLCon.GatewayIP, 3),
+			SL_IPV4_BYTE(g_sSLCon.GatewayIP, 2),
+			SL_IPV4_BYTE(g_sSLCon.GatewayIP, 1),
+			SL_IPV4_BYTE(g_sSLCon.GatewayIP, 0));
 
 	osi_MsgQWrite(&g_sUartQuee, &pMsgBuffer, OSI_NO_WAIT);
 
@@ -101,8 +107,16 @@ void ControlServer(void *pvParameters) {
 			Led_Green(LED_ON);
 			strcpy(ServerBuffer, "OK");
 			i32DataSize = 3;
-		} else if (strcmp(ServerBuffer, "Led OFF") == 0) {
+		} else if (strcmp(ServerBuffer, "Led Off") == 0) {
 			Led_Green(LED_OFF);
+			strcpy(ServerBuffer, "OK");
+			i32DataSize = 3;
+		} else if (strcmp(ServerBuffer, "Lamp On") == 0) {
+			MAP_GPIOPinWrite(GPIOA0_BASE, GPIO_PIN_6, GPIO_PIN_6);
+			strcpy(ServerBuffer, "OK");
+			i32DataSize = 3;
+		} else if (strcmp(ServerBuffer, "Lamp Off") == 0) {
+			MAP_GPIOPinWrite(GPIOA0_BASE, GPIO_PIN_6, 0);
 			strcpy(ServerBuffer, "OK");
 			i32DataSize = 3;
 		}
