@@ -47,7 +47,7 @@ extern void ControlServer(void *pvParameters);
 int main(void) {
 
 	MAP_IntVTableBaseSet((unsigned long) &g_pfnVectors[0]);
-	MAP_IntMasterEnable();
+	//MAP_IntMasterEnable();
 	MAP_IntEnable(FAULT_SYSTICK);
 
 	PRCMCC3200MCUInit();
